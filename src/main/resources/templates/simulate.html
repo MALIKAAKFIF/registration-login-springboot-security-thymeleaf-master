@@ -18,7 +18,7 @@
     input[type="range"] {
         -webkit-appearance: none;
         width: 100%;
-        height: 10px;
+        height: 5px;
         border-radius: 5px;
         background: #ddd;
         outline: none;
@@ -33,7 +33,7 @@
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: #E85418;
+        background: #E85412;
         cursor: pointer;
     }
 
@@ -61,8 +61,9 @@
 
     .btn-primary {
         display: block;
-        margin: 0 auto;
-        background-color: #E85418;
+        margin: 30px auto 0;
+
+        background-color: #E85412;
         color: #fff;
         padding: 10px 20px;
         border: none;
@@ -78,7 +79,7 @@
 </head>
 <body>
 <!-- Include navigation as in your other pages -->
-<h1 style="text-align: center; color: #E85418;">Je simule mon crédit</h1>
+<h2 style="text-align: center; color: #E85412;">Je fais la simulation de mon crédit</h2>
 <div class="container" style="margin-top: 20px;">
     <form th:action="@{/simulate}" th:object="${simulation}" method="post" onsubmit="submitSimulationForm()">
         <div class="form-group">
@@ -91,15 +92,16 @@
             <input type="number" class="form-control" id="duration" th:field="*{duration}" required>
             <input type="range" id="durationSlider" min="0" max="300" step="3" oninput="updateDuration(this.value)">
         </div>
-        <div class="form-group">
+        <div >
             <label for="emploie">Emploie:</label>
-            <select class="form-control" id="emploie" th:field="*{emploie}" required>
+            <select class="form-control" id="emploie" th:field="*{emploie}" required style="border-color: #E85412; padding: 6px;">
                 <option value="Salarié du secteur privé">Salarié du secteur privé</option>
                 <option value="Fonctionnaire">Fonctionnaire</option>
                 <option value="Profession libérale">Profession libérale</option>
                 <option value="Artisan">Artisan</option>
                 <option value="Autres professions">Autres professions</option>
             </select>
+
         </div>
         <!-- Add fields for professional information -->
         <button type="submit" class="btn btn-primary">Je calcule</button>
@@ -109,10 +111,16 @@
 <script>
     function updateAmount(value) {
         document.getElementById("amount").value = value;
+        var slider = document.getElementById("amountSlider");
+        var percent = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = "linear-gradient(to right, #E85412 0%, #E85412 " + percent + "%, #ddd " + percent + "%, #ddd 100%)";
     }
 
     function updateDuration(value) {
         document.getElementById("duration").value = value;
+        var slider = document.getElementById("durationSlider");
+        var percent = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = "linear-gradient(to right, #E85412 0%, #E85412 " + percent + "%, #ddd " + percent + "%, #ddd 100%)";
     }
 
     document.getElementById("amount").value = document.getElementById("amountSlider").value;
@@ -120,11 +128,25 @@
 
     document.getElementById("amountSlider").addEventListener("input", function () {
         document.getElementById("amount").value = this.value;
+        var percent = (this.value - this.min) / (this.max - this.min) * 100;
+        this.style.background = "linear-gradient(to right, #009EE0 0%, #009EE0 " + percent + "%, #ddd " + percent + "%, #ddd 100%)";
     });
 
     document.getElementById("durationSlider").addEventListener("input", function () {
         document.getElementById("duration").value = this.value;
+        var percent = (this.value - this.min) / (this.max - this.min) * 100;
+        this.style.background = "linear-gradient(to right, #009EE0 0%,#009EE0 " + percent + "%, #ddd " + percent + "%, #ddd 100%)";
     });
+
+    // Set the initial values and styles of the sliders
+    var amountSlider = document.getElementById("amountSlider");
+    var durationSlider = document.getElementById("durationSlider");
+
+    amountSlider.value = amountSlider.min;
+    durationSlider.value = durationSlider.min;
+
+    updateAmount(amountSlider.value);
+    updateDuration(durationSlider.value);
 </script>
 
 
