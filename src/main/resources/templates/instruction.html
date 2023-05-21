@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dossier Instruction</title>
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<h1>Dossier Instruction</h1>
+<div id="clientForm">
+  <p>Bonjour ! Êtes-vous un client de la banque CIH ?</p>
+  <form  method="post">
+    <button type="button" onclick="showForm()">Non</button>
+    <button type="button" onclick="showInstructionForm()">Oui</button>
+  </form>
+</div>
+<form id="instructionForm" th:action="@{/instruction}" th:object="${dossier}" method="post" enctype="multipart/form-data">
+  <div id="personalInfo" class="hidden">
+    <p>Bonjour, soumettez votre dossier de crédit en ligne en remplissant le formulaire suivant:</p>
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required/><br/>
+
+    <label>Radical:</label>
+    <input type="text" th:field="*{radical}" required/>
+    <i>(Indicatif expliquant le radical)</i><br/>
+
+    <button type="button" onclick="showAdditionalFields()">Suivant</button>
+  </div>
+
+  <div id="additionalFields" class="hidden">
+    <label>Nom:</label>
+    <input type="text" th:field="*{nom}" required/><br/>
+
+    <label>Ville:</label>
+    <input type="text" th:field="*{ville}" required/><br/>
+
+    <label>Code Postal:</label>
+    <input type="text" th:field="*{code_postal}" required/><br/>
+
+    <label>Numéro de Téléphone:</label>
+    <input type="text" th:field="*{num_telephone}" required/><br/>
+
+    <label>Revenu Mensuel:</label>
+    <input type="text" th:field="*{revenu_mensuel}" required/><br/>
+
+    <label>Avez-vous un ou plusieurs crédits auprès d’un autre établissement de crédit en dehors de CIH Bank ?</label>
+    <button type="button" onclick="showCreditAmountFields('oui')">Oui</button>
+    <button type="button" onclick="hideCreditAmountFields()">Non</button>
+
+    <div id="creditAmountField" class="hidden">
+      <label>Montant du crédit:</label>
+      <input type="text" th:field="*{montant_credit}"/><br/>
+
+      <button type="button" onclick="showDocumentFields()">Suivant</button>
+    </div>
+  </div>
+
+  <div id="documentFields" class="hidden">
+    <label>Attestation de salaire datant de moins de 30 jours:</label>
+    <input type="file" name="attestation_salaire" required/><br/>
+
+    <label>Bulletin de paie du mois dernier:</label>
+    <input type="file" name="bulletin_paie_mois_dernier" required/><br/>
+
+    <label>2ème Bulletin de paie du mois dernier:</label>
+    <input type="file" name="deuxieme_bulletin_paie_mois_dernier" required/><br/>
+
+    <label>CIN recto (phase avec photo):</label>
+    <input type="file" name="cin_recto" required/><br/>
+
+    <label>CIN verso (phase avec adresse):</label>
+    <input type="file" name="cin_verso" required/><br/>
+
+
+
+    <button onclick="envoie()" type="submit">Submit</button>
+  </div>
+
+
+
+
+
+
+
+</form>
+
+<script>
+//sauvegarde cache
+    function checkCache() {
+        if (localStorage.getItem("simulationData")){
+        var simulationdata=JSON.parse(localStorage.getItem("simulationData"));
+        var amount = simulationdata.montantDemande;
+        var duration = simulationdata.duree;
+        var emploie = simulationdata.emploi;
+        var monthlyPayment=simulationdata.mensualite;
+
+        console.log(amount,duration,emploie,monthlyPayment);
+
+
+        } else {
+            console.log('API Cache non prise en charge par le navigateur.');
+        }
+    }
+    function envoie() {
+  if (localStorage.getItem("simulationData")) {
+    var simulationdata = JSON.parse(localStorage.getItem("simulationData"));
+    var amount = simulationdata.montantDemande;
+    var duration = simulationdata.duree;
+    var emploie = simulationdata.emploi;
+    var monthlyPayment = simulationdata.mensualite;
+
+    // Créer les éléments input de type hidden
+    var amountInput = document.createElement("input");
+    amountInput.type = "hidden";
+    amountInput.name = "amount";
+    amountInput.value = amount;
+
+    var durationInput = document.createElement("input");
+    durationInput.type = "hidden";
+    durationInput.name = "duration";
+    durationInput.value = duration;
+
+    var emploieInput = document.createElement("input");
+    emploieInput.type = "hidden";
+    emploieInput.name = "emploie";
+    emploieInput.value = emploie;
+
+    var monthlyPaymentInput = document.createElement("input");
+    monthlyPaymentInput.type = "hidden";
+    monthlyPaymentInput.name = "monthlyPayment";
+    monthlyPaymentInput.value = monthlyPayment;
+
+    // Ajouter les éléments au formulaire
+    var form = document.getElementById("instructionForm");
+    form.appendChild(amountInput);
+    form.appendChild(durationInput);
+    form.appendChild(emploieInput);
+    form.appendChild(monthlyPaymentInput);
+
+    // Soumettre le formulaire
+    form.submit();
+  }
+}
+
+</script>
+<script>
+  function showForm() {
+    window.location.href = "https://www.cihbank.ma/";
+  }
+
+  function showInstructionForm() {
+    document.getElementById("clientForm").classList.add("hidden");
+    document.getElementById("personalInfo").classList.remove("hidden");
+  }
+
+
+  function showAdditionalFields() {
+    document.getElementById("personalInfo").classList.add("hidden");
+    document.getElementById("additionalFields").classList.remove("hidden");
+  }
+  function showCreditAmountFields(response) {
+    if (response === 'oui') {
+      document.getElementById("creditAmountField").classList.remove("hidden");
+          document.getElementById("documentFields").classList.add("hidden");
+
+    } else {
+      document.getElementById("creditAmountField").classList.add("hidden");
+    }
+  }
+  function showCreditAmountFields(response) {
+  if (response === 'oui') {
+    document.getElementById("creditAmountField").classList.remove("hidden");
+    document.getElementById("documentFields").classList.add("hidden");
+  } else {
+    document.getElementById("creditAmountField").classList.add("hidden");
+    document.getElementById("documentFields").classList.remove("hidden");
+  }
+}
+
+function hideCreditAmountFields() {
+  // Hide additionalFields section
+  document.getElementById("additionalFields").classList.add("hidden");
+
+  // Hide creditAmountField section (optional, if needed)
+  document.getElementById("creditAmountField").classList.add("hidden");
+
+  // Show documentFields section
+  document.getElementById("documentFields").classList.remove("hidden");
+}
+
+function showDocumentFields() {
+  // Hide additionalFields section
+  document.getElementById("additionalFields").classList.add("hidden");
+
+  // Hide creditAmountField section (optional, if needed)
+  document.getElementById("creditAmountField").classList.add("hidden");
+
+  // Show documentFields section
+  document.getElementById("documentFields").classList.remove("hidden");
+}
+
+
+
+</script>
+</body>
+</html>

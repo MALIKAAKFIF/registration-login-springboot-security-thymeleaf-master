@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulation Result</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        #simulationDiv {
+            border: 2px solid #009EE0;
+            padding: 20px;
+            margin-right: 10px;
+            width:300px;
+        }
+
+        #resultDiv {
+            border: 2px solid #009EE0;
+            padding: 20px;
+            margin-left: 10px;
+            width:300px;
+        }
+
+        #simulationDiv h3,
+        #resultDiv h3 {
+            text-align: center;
+            color: #009EE0;
+            margin-bottom: 20px;
+        }
+
+        #simulationDiv p,
+        #resultDiv p {
+            margin-bottom: 10px;
+        }
+
+        #resultDiv button {
+            background-color: #E85418;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #simulationDiv button {
+            background-color: #009EE0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="simulationDiv">
+        <h3>Simulation effectuée</h3>
+        <p>Montant demandé: <span id="creditAmountSpan" th:text="${simulationResult.creditAmount}"></span></p>
+        <p>Durée: <span id="durationSpan" th:text="${simulationResult.duration}"></span> mois</p>
+        <p>Emploi: <span id="emploieSpan" th:text="${simulationResult.emploie}"></span></p>
+        <p>Mensualité: <span id="monthlyPaymentSpan" th:text="${simulationResult.monthlyPayment}"></span></p>
+        <button onclick="editSimulation()">Modifier la simulation</button>
+    </div>
+    <div id="resultDiv">
+        <h3>Résultat de votre simulation</h3>
+        <p>Montant demandé: <span th:text="${simulationResult.creditAmount}"></span></p>
+        <p>Durée: <span th:text="${simulationResult.duration}"></span> mois</p>
+        <p>Emploi: <span th:text="${simulationResult.emploie}"></span></p>
+        <p>Mensualité: <span th:text="${simulationResult.monthlyPayment}"></span></p>
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="creditAmount" th:value="${simulationResult.creditAmount}"/>
+            <input type="hidden" name="duration" th:value="${simulationResult.duration}"/>
+            <button type="submit" formaction="/login" onclick="cacheSimulation()">Je demande mon crédit</button>
+
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function editSimulation() {
+        window.location.href = "/simulate"; // Redirection vers la page de simulation
+    }
+    function cacheSimulation() {
+    var montantDemande = document.getElementById("creditAmountSpan").innerText;
+    var duree = document.getElementById("durationSpan").innerText;
+    var emploi = document.getElementById("emploieSpan").innerText;
+    var mensualite = document.getElementById("monthlyPaymentSpan").innerText;
+    var simulationData = {
+    montantDemande: montantDemande,
+    duree: duree,
+    emploi: emploi, mensualite: mensualite };
+
+    localStorage.setItem("simulationData", JSON.stringify(simulationData)); }
+
+
+
+</script>
+
+</body>
+</html>

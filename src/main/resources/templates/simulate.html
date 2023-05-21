@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Include meta, title, and CSS as in your other pages -->
+    <style>
+    .container {
+        border: 2px solid #009EE0;
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 400px;
+        margin-top: 50px;
+    }
+
+    .form-group {
+        margin-bottom: 40px;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;
+        background: #ddd;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #E85418;
+        cursor: pointer;
+    }
+
+    .form-group label {
+        margin-bottom: 10px;
+    }
+
+    .form-group input[type="range"] {
+        margin-top: 10px;
+    }
+
+    .form-group input[type="number"],
+    .form-group select {
+        border: none;
+        outline: none;
+    }
+
+    .form-group select {
+        border: none;
+        outline: none;
+        appearance: none;
+        background: url('https://example.com/arrow-icon.png') no-repeat right center; /* Remplacez l'URL par le chemin de votre icône */
+        padding-right: 20px; /* Ajoute un espace à droite pour l'icône */
+    }
+
+    .btn-primary {
+        display: block;
+        margin: 0 auto;
+        background-color: #E85418;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    </style>
+</head>
+<body>
+<!-- Include navigation as in your other pages -->
+<h1 style="text-align: center; color: #E85418;">Je simule mon crédit</h1>
+<div class="container" style="margin-top: 20px;">
+    <form th:action="@{/simulate}" th:object="${simulation}" method="post" onsubmit="submitSimulationForm()">
+        <div class="form-group">
+            <label for="amount">Montant de crédit:</label>
+            <input type="number" class="form-control" id="amount" th:field="*{amount}" required>
+            <input type="range" id="amountSlider" min="0" max="100000" step="1000" oninput="updateAmount(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="duration">Durée de crédit (en mois):</label>
+            <input type="number" class="form-control" id="duration" th:field="*{duration}" required>
+            <input type="range" id="durationSlider" min="0" max="300" step="3" oninput="updateDuration(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="emploie">Emploie:</label>
+            <select class="form-control" id="emploie" th:field="*{emploie}" required>
+                <option value="Salarié du secteur privé">Salarié du secteur privé</option>
+                <option value="Fonctionnaire">Fonctionnaire</option>
+                <option value="Profession libérale">Profession libérale</option>
+                <option value="Artisan">Artisan</option>
+                <option value="Autres professions">Autres professions</option>
+            </select>
+        </div>
+        <!-- Add fields for professional information -->
+        <button type="submit" class="btn btn-primary">Je calcule</button>
+    </form>
+</div>
+
+<script>
+    function updateAmount(value) {
+        document.getElementById("amount").value = value;
+    }
+
+    function updateDuration(value) {
+        document.getElementById("duration").value = value;
+    }
+
+    document.getElementById("amount").value = document.getElementById("amountSlider").value;
+    document.getElementById("duration").value = document.getElementById("durationSlider").value;
+
+    document.getElementById("amountSlider").addEventListener("input", function () {
+        document.getElementById("amount").value = this.value;
+    });
+
+    document.getElementById("durationSlider").addEventListener("input", function () {
+        document.getElementById("duration").value = this.value;
+    });
+</script>
+
+
+</body>
+</html>

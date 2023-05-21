@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Activation Result</title>
+</head>
+<body>
+<h1>Account Activation</h1>
+<p th:if="${activationSuccess}">Your account has been successfully activated.</p>
+<p th:if="${activationError}">Account activation failed. Please try again.</p>
+</body>
+</html>
